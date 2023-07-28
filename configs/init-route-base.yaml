@@ -1,0 +1,64 @@
+routes:
+- id: 1
+  uri: /textin_gateway/*
+  name: web route
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  - PATCH
+  - HEAD
+  - OPTIONS
+  - CONNECT
+  - TRACE
+  - PURGE
+  upstream_id: 1
+  status: 1
+- id: 2
+  uri: /gateway/*
+  name: backend route
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  - PATCH
+  - HEAD
+  - OPTIONS
+  - CONNECT
+  - TRACE
+  - PURGE
+  upstream_id: 2
+  status: 1
+upstreams:
+- id: 1
+  nodes:
+    "1.1.1.1:80": 1
+  timeout:
+    connect: 60
+    send: 60
+    read: 60
+  type: roundrobin
+  scheme: http
+  pass_host: pass
+  name: GATEWAY_WEB
+  keepalive_pool:
+    idletimeout: 60
+    requests: 1000
+    size: 320
+- id: 2
+  nodes:
+    "1.1.1.1:80": 1
+  timeout:
+    connect: 60
+    send: 60
+    read: 60
+  type: roundrobin
+  scheme: http
+  pass_host: pass
+  name: GATEWAY_BACKEND
+  keepalive_pool:
+    idletimeout: 60
+    requests: 1000
+    size: 320

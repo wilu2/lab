@@ -1,0 +1,59 @@
+info(
+    title: "TextIn Gateway"
+    author: "chen_qian"
+    date: "2022-10-02"
+    desc: "Logs API"
+    version: "1.0"
+)
+
+type NodeInfo struct {
+    Host        string `json:"host"`
+    Port        int `json:"port"`
+    Wight       int `json:"wight"`
+    Concurrency int `json:"concurrency"`  //并发数  
+}
+
+type LogsReq struct {
+    ProductName string      `json:"product_name"` // 模型引擎uid
+    Description string      `json:"description"`
+    Nodes       []NodeInfo  `json:"nodes"`
+    Protocol    int         `json:"protocol"`  // 协议：0-http 1-https 2-grpc 3-grpcs
+    TLS         bool        `json:"tls"`
+    Certificate string      `json:"certificate"`
+    PrivateKey  string      `json:"private_key"`
+    Cordon      int         `json:"cordon"`
+}
+
+type ProductInfo struct {
+    ID          string      `json:"id"`
+    ProductName string      `json:"product_name"` // 模型引擎uid
+    Description string      `json:"description"`
+    Nodes       []NodeInfo  `json:"nodes"`
+    Protocol    int         `json:"protocol"`  // 协议：0-http 1-https 2-grpc 3-grpcs
+    TLS         bool        `json:"tls"`
+    Certificate string      `json:"certificate"`
+    PrivateKey  string      `json:"private_key"`
+    Cordon      int         `json:"cordon"`
+    CreateTime  int         `json:"create_time"`      
+    UpdateTime  int         `json:"update_time"`
+}
+
+@server(
+    jwt: Auth
+    group: product
+    prefix: /gateway/v1
+    middleware: DataPanelMiddleware
+    swtags: "产品相关"
+)
+
+service textin {
+    @doc "开始训练"
+    @handler createPrduct
+    post /products (ProductReq) returns (ProductInfo)
+    @handler getProduct
+    get  /products/:id () returns (ProductInfo)
+    @handler updateProduct
+    post /product/:id/update (ProductReq) returns (ProductInfo)
+    @handler deleteProduct
+    post /products/:id/delete () returns ()       
+}

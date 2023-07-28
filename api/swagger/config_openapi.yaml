@@ -1,0 +1,80 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/config:
+    get:
+      tags: [Config]
+      summary: Get Config
+      description: TBA
+      operationId: Get Config
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/Config"
+
+    post:
+      tags: [Config]
+      summary: Update Config
+      description: TBA
+      operationId: update_config
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/UpdateConfig"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/Config"
+
+components:
+  schemas:
+    Config:
+      type: object
+      properties:
+        name:
+          type: string  
+        logo_data:
+          type: string
+        version: 
+          type: string
+    
+    UpdateConfig:
+      type: object
+      properties:
+        name:
+          type: string  
+        logo_data:
+          type: string

@@ -1,0 +1,300 @@
+info(
+    title: "TextIn Gateway"
+    author: "chen_qian"
+    date: "2023-01-09"
+    desc: "Gateway API"
+    version: "1.1"
+)
+
+type ListReq {
+    Keywords string `json:"keywords"`                                   //引擎搜索关键字
+    Page     int    `json:"page" binding:"required" default:"1"`  //页数
+    PageSize int    `json:"page_size" binding:"required" default:"20"` //页大小
+}
+
+type IdPathParam {
+    ID int `path:"id"`
+}
+
+type UpdateEntityID int `json:"id"`
+
+type BaseInfo {
+	ID         interface{} `json:"id"`
+	CreateTime int64       `json:"create_time,omitempty"`
+	UpdateTime int64       `json:"update_time,omitempty"`
+}
+
+type TimeoutValue float32
+
+type Timeout {
+	Connect TimeoutValue `json:"connect,omitempty"`
+	Send    TimeoutValue `json:"send,omitempty"`
+	Read    TimeoutValue `json:"read,omitempty"`
+}
+
+type Node {
+	Host     string      `json:"host,omitempty"`
+	Port     int         `json:"port,omitempty"`
+	Weight   int         `json:"weight"`
+	Metadata interface{} `json:"metadata,omitempty"`
+	Priority int         `json:"priority,omitempty"`
+}
+
+type Healthy {
+	Interval     int   `json:"interval,omitempty"`
+	HttpStatuses []int `json:"http_statuses,omitempty"`
+	Successes    int   `json:"successes,omitempty"`
+}
+
+type UnHealthy {
+	Interval     int   `json:"interval,omitempty"`
+	HTTPStatuses []int `json:"http_statuses,omitempty"`
+	TCPFailures  int   `json:"tcp_failures,omitempty"`
+	Timeouts     int   `json:"timeouts,omitempty"`
+	HTTPFailures int   `json:"http_failures,omitempty"`
+}
+
+type Active struct {
+	Type                   string       `json:"type,omitempty"`
+	Timeout                TimeoutValue `json:"timeout,omitempty"`
+	Concurrency            int          `json:"concurrency,omitempty"`
+	Host                   string       `json:"host,omitempty"`
+	Port                   int          `json:"port,omitempty"`
+	HTTPPath               string       `json:"http_path,omitempty"`
+	HTTPSVerifyCertificate bool         `json:"https_verify_certificate,omitempty"`
+	Healthy                Healthy      `json:"healthy,omitempty"`
+	UnHealthy              UnHealthy    `json:"unhealthy,omitempty"`
+	ReqHeaders             []string     `json:"req_headers,omitempty"`
+}
+
+type Passive struct {
+	Type      string    `json:"type,omitempty"`
+	Healthy   Healthy   `json:"healthy,omitempty"`
+	UnHealthy UnHealthy `json:"unhealthy,omitempty"`
+}
+
+type HealthChecker struct {
+	Active  Active  `json:"active,omitempty"`
+	Passive Passive `json:"passive,omitempty"`
+}
+
+type UpstreamTLS struct {
+	ClientCert string `json:"client_cert,omitempty"`
+	ClientKey  string `json:"client_key,omitempty"`
+}
+
+type UpstreamKeepalivePool struct {
+	IdleTimeout *TimeoutValue `json:"idle_timeout,omitempty"`
+	Requests    int           `json:"requests,omitempty"`
+	Size        int           `json:"size"`
+}
+
+type UpstreamDef {
+	Nodes         interface{}            `json:"nodes,omitempty"`
+	Retries       *int                   `json:"retries,omitempty"`
+	Timeout       *Timeout               `json:"timeout,omitempty"`
+	Type          string                 `json:"type,omitempty"`
+	Checks        interface{}            `json:"checks,omitempty"`
+	HashOn        string                 `json:"hash_on,omitempty"`
+	Key           string                 `json:"key,omitempty"`
+	Scheme        string                 `json:"scheme,omitempty"`
+	DiscoveryType string                 `json:"discovery_type,omitempty"`
+	DiscoveryArgs map[string]string      `json:"discovery_args,omitempty"`
+	PassHost      string                 `json:"pass_host,omitempty"`
+	UpstreamHost  string                 `json:"upstream_host,omitempty"`
+	Name          string                 `json:"name,omitempty"`
+	Desc          string                 `json:"desc,omitempty"`
+	ServiceName   string                 `json:"service_name,omitempty"`
+	Labels        map[string]string      `json:"labels,omitempty"`
+	TLS           *UpstreamTLS           `json:"tls,omitempty"`
+	KeepalivePool *UpstreamKeepalivePool `json:"keepalive_pool,omitempty"`
+	RetryTimeout  TimeoutValue           `json:"retry_timeout,omitempty"`
+}
+
+type Upstream {
+	BaseInfo
+	UpstreamDef
+}
+
+type ApiSet {
+	Method  string  `json:"method"`
+	Path    string  `json:"path"`
+}
+
+type ServiceDef {
+    UpstreamDef UpstreamDef `json:"upstream_def"`
+    ApiSet      ApiSet      `json:"api_set"`
+}
+
+type EditInfo {
+    ID         int    `json:"id"`
+    Creator    string `json:"creator"`
+    CreateTime int64  `json:"create_time"`
+    LastEditor string `json:"last_editor"`
+    UpdateTime int64  `json:"update_time"`
+}
+
+type Service {
+    EditInfo
+    ServiceDef
+}
+
+type ServiceList {
+    Items []Service `json:"items"`
+    Count uint64    `json:"count"`
+}
+
+
+
+@server(
+    jwt: Auth
+    group: service
+    prefix: /gateway/v1
+    swtags: "service"
+)
+
+service textin {
+    @doc "创建服务"
+    @handler createService
+    post /services (ServiceDef) returns (Service)
+    @doc "获取产品信息"
+    @handler getService
+    get  /services/:id (IdPathParam) returns (Service)
+    @doc "修改产品信息"
+    @handler updateService
+    post /services/:id/update (ServiceDef) returns (Service)
+    @doc "删除产品"
+    @handler deleteService
+    post /services/:id/delete (IdPathParam) returns ()
+    @doc "获取产品列表"
+    @handler listService
+    get /services/list (ListReq) returns (ServiceList)
+}
+
+type ChannelDef {
+    Name string `json:"name"`
+}
+
+type Channel {
+    EditInfo
+    ChannelDef
+}
+
+type ChannelList {
+    Items []Channel `json:"items"`
+    Count uint64    `json:"count"`
+}
+
+@server(
+    jwt: Auth
+    group: channel
+    prefix: /gateway/v1
+    swtags: "channel"
+)
+
+service textin {
+    @doc "创建渠道"
+    @handler createChannel
+    post /channels (ChannelReq) returns (Channel)
+    @doc "获取渠道信息"
+    @handler getChannel
+    get  /channels/:id (IdPathParam) returns (Channel)
+    @doc "修改渠道信息"
+    @handler updateChannel
+    post /channels/:id/update (ChannelReq) returns (Channel)
+    @doc "删除渠道"
+    @handler deleteChannel
+    post /channels/:id/delete (IdPathParam) returns ()
+    @doc "获取渠道列表"
+    @handler listChannel
+    get /channels/list (ListReq) returns (ChannelTreeResp)       
+}
+
+type Status uint8
+
+// swagger:model Route
+type RouteDef {
+	URI             string                 `json:"uri,omitempty"`
+	Uris            []string               `json:"uris,omitempty"`
+	Name            string                 `json:"name" validate:"max=50"`
+	Desc            string                 `json:"desc,omitempty" validate:"max=256"`
+	Priority        int                    `json:"priority,omitempty"`
+	Methods         []string               `json:"methods,omitempty"`
+	Host            string                 `json:"host,omitempty"`
+	Hosts           []string               `json:"hosts,omitempty"`
+	RemoteAddr      string                 `json:"remote_addr,omitempty"`
+	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
+	Vars            []interface{}          `json:"vars,omitempty"`
+	FilterFunc      string                 `json:"filter_func,omitempty"`
+	Script          interface{}            `json:"script,omitempty"`
+	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
+	Plugins         map[string]interface{} `json:"plugins,omitempty"`
+	PluginConfigID  interface{}            `json:"plugin_config_id,omitempty"`
+	ServiceID       interface{}            `json:"service_id,omitempty"`
+	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
+	ServiceProtocol string                 `json:"service_protocol,omitempty"`
+	Labels          map[string]string      `json:"labels,omitempty"`
+	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Status          Status                 `json:"status"`
+}
+
+type ChannelID int
+
+type Route {
+    BaseInfo
+    RouteDef
+}
+
+type ApplicaitonDef {
+    RouteDef  RouteDef `json:"route_def"`
+    ServiceID int      `json:"service_id"`
+    ChannelID int      `json:"channel_id"`
+}
+
+type Applicaiton {
+    EditInfo
+    ApplicaitonDef
+}
+
+type UpdateApplicationInfo {
+    UpdateEntityID
+    ApplicaitonDef
+}
+
+type ApplicationInfoList {
+    Items []Application `json:"items"`
+    Count uint64        `json:"count"`
+}
+
+type ApplicationListReq {
+    ChannelID int `json:"channel_id"`
+    Keywords string `json:"keywords"`                                   //引擎搜索关键字
+    Page     int    `json:"page" binding:"required" default:"1"`  //页数
+    PageSize int    `json:"page_size" binding:"required" default:"20"` //页大小
+}
+
+@server(
+    jwt: Auth
+    group: application
+    prefix: /gateway/v1
+    middleware: DataPanelMiddleware
+    swtags: "application"
+)
+
+service textin {
+    @doc "获取应用列表"
+    @handler listApplication
+    get  /applications/list (ApplicationListReq) returns (ApplicationInfoList)
+    @doc "创建应用"
+    @handler createApplication
+    post /applications (ApplicationReq) returns (ApplicationInfo)
+    @doc "获取应用信息"
+    @handler getApplication
+    get  /applications/:application_id (ApplicationIdPathParam) returns (ApplicationInfo)
+    @doc "修改应用信息"
+    @handler updateApplication
+    post /applications/:application_id/update (UpdateApplicationInfo) returns (ApplicationInfo)
+    @doc "删除应用"
+    @handler deleteApplication
+    post /applications/:application_id/delete (ApplicationIdPathParam) returns ()       
+}

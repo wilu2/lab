@@ -1,0 +1,1 @@
+ALTER table users add status boolean DEFAULT true;

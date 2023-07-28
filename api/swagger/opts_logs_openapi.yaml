@@ -1,0 +1,172 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/opt_logs:
+    get:
+      tags: [Operation Logs]
+      summary: List Operation Logs
+      description: TBA
+      operationId: list_opt_logs
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/OperationLog"
+                      count:
+                        type: integer
+                        format: int64
+    delete:
+      tags: [Operation Logs]
+      summary: Delete Operation Logs
+      description: TBA
+      operationId: delete_opt_logs
+      parameters:
+        - in: query
+          name: begin_date
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: end_date
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/OperationLog"
+                      count:
+                        type: integer
+                        format: int64
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    OperationLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        op_time:
+          type: integer
+        operation:
+          type: string
+        resource:
+          type: string
+        resource_type:
+          type: string
+        username:
+          type: string
+      enum:
+        - operation: "create" 
+          resource_type: "service"
+        - operation: "delete"
+          resource_type: "service"
+        - operation: "update"
+          resource_type: "service"
+        - operation: "create"
+          resource_type: "application"
+        - operation: "delete"
+          resource_type: "application"
+        - operation: "update"
+          resource_type: "application"
+        - operation: "offline"
+          resource_type: "application"
+        - operation: "online" 
+          resource_type: "application"
+        - operation: "create"
+          resource_type: "application"
+        - operation: "delete"
+          resource_type: "channel"
+        - operation: "update"
+          resource_type: "channel"
+        - operation: "create"
+          resource_type: "user"
+        - operation: "delete"
+          resource_type: "user"
+        - operation: "update"
+          resource_type: "user"
+        - operation: "update"
+          resource_type: "config"
+        - operation: "login"
+          resource_type: "user"
+        - operation: "logout"
+          resource_type: "user"
+      description: |
+        当前支持的`operation`,`resource_type`列表
+        | resource | action | 说明 |
+        | --- | --- | --- |
+        | create | service | 增加服务 |
+        | delete | service | 删除服务 |
+        | update | service | 编辑服务 |
+        | create | application | 新增应用 |
+        | delete | application | 删除应用 |
+        | update | application | 编辑应用 |
+        | online | application | 发布应用 |
+        | offline | application | 下线应用 |
+        | create | channel | 增加渠道 |
+        | delete | channel | 删除渠道 |
+        | update | channel | 编辑渠道 |
+        | create | user | 增加用户 |
+        | delete | user | 删除用户 |
+        | update | user | 编辑用户 |
+        | update | config | 修改平台设置 |
+        | login | user | 用户登录 |
+        | logout | user | 用户登出 |
+      

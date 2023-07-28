@@ -1,0 +1,26 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/document/{id}:
+    get:
+      tags: [Document]
+      summary: Get Document Content
+      description: TBA
+      operationId: get_document_content
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            text/plain: {}

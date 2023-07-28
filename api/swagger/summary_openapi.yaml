@@ -1,0 +1,134 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/summary:
+    get:
+      tags: [Service]
+      summary: Summary Gateway
+      description: TBA
+      operationId: summary_gateway
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/SummaryDetailInfo"
+
+  /gateway/v1/summary_graph:
+    post:
+      tags: [Service]
+      summary: Summary Graph Gateway
+      description: TBA
+      operationId: summary_graph_gateway
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/SummaryReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/GraphInfo"
+
+components:
+  schemas:
+    SummaryInfo:
+      type: object
+      properties:
+        service_count:
+          type: integer
+        channel_count:
+          type: integer
+        application_count:
+          type: integer
+        request_count:
+          type: integer
+
+    DetailInfo:
+      type: object
+      properties:
+        current: 
+          type: integer
+        stopped:
+          type: integer
+        total:
+          type: integer
+
+    SummaryDetailInfo:
+      type: object
+      properties:
+        service_count:
+          type: object
+          $ref: "#/components/schemas/DetailInfo"
+        channel_count:
+          type: object
+          $ref: "#/components/schemas/DetailInfo"
+        application_count:
+          type: object
+          $ref: "#/components/schemas/DetailInfo"
+        request_count:
+          type: integer
+
+    SummaryReq:
+      type: object
+      properties:
+        begin_date:
+          type: integer
+        end_date:
+          type: integer
+
+    GraphInfo:
+      type: object
+      properties:
+        yAxis:
+          type: string
+        xAxis:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemInfo"
+
+    ItemInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        data:
+          type: array
+          items:
+            type: integer
+        
+        

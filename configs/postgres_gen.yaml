@@ -1,0 +1,36 @@
+version: "0.1"
+database:
+  # input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
+  db : "mysql"
+  # consult[https://gorm.io/docs/connecting_to_the_database.html]"
+  # dsn: "host=127.0.0.1 user=postgres password=password dbname=gateway port=5432 sslmode=disable TimeZone=UTC"
+  dsn : "postgres:postgres@tcp(192.168.60.118:3306)/gateway?charset=utf8&parseTime=true&loc=Local"
+  # enter the required data table or leave it blank.You can input :
+  tables :
+    - access_log
+    - apisix_route
+    - apisix_upstream
+    - application
+    - channel
+    - config
+    - document
+    - optlogs
+    - service
+    - users
+    - versions
+  # specify a directory for output
+  outPath :  "./internal/apiserver/dal/query"
+  # query code file name, default: gen.go
+  outFile :  ""
+  # generate unit test for query code
+  withUnitTest  : false
+  # generated model code's package name
+  modelPkgName  : ""
+  # generate with pointer when field is nullable
+  fieldNullable : true
+  # generate field with gorm index tag
+  fieldWithIndexTag : false
+  # generate field with gorm column type tag
+  fieldWithTypeTag  : true
+  # detect integer field's unsigned type, adjust generated data type
+  fieldSignable  : true

@@ -1,0 +1,475 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/users:
+    get:
+      tags: [User]
+      summary: List Users
+      description: TBA
+      operationId: list_users
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/User"
+                      count:
+                        type: integer
+                        format: int64
+    post:
+      tags: [User]
+      summary: Create Users
+      description: TBA
+      operationId: create_users
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/UserDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/User"
+
+  /gateway/v1/users/{id}:
+    get:
+      tags: [User]
+      summary: Get Users
+      description: TBA
+      operationId: get_users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/User"
+
+  /gateway/v1/users/{id}/update:
+    post:
+      tags: [User]
+      summary: Update Users
+      description: TBA
+      operationId: update_users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/UserDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/User"
+
+  /gateway/v1/users/{id}/delete:
+    get:
+      tags: [User]
+      summary: Delete Users
+      description: TBA
+      operationId: delete_users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+
+  /gateway/v1/groups:
+    get:
+      tags: [Group]
+      summary: List Groups
+      description: TBA
+      operationId: list_groups
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          # type: object
+                          $ref: "#/components/schemas/GroupInfo.v1"
+                      count:
+                        type: integer
+                        format: int64
+
+  /gateway/v1/login_verify:
+    post:
+      tags: [Login]
+      summary: Delete Users
+      description: TBA
+      operationId: login_verify
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LoginInfo"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/TokenInfo"
+
+  /gateway/v1/token_verify:
+    post:
+      tags: [Login]
+      summary: Delete Users
+      description: TBA
+      operationId: token_verify
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/TokenInfo"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/RoleInfo"
+
+  /gateway/v1/reset_password:
+    post:
+      tags: [Login]
+      summary: Delete Users
+      description: TBA
+      operationId: reset_password
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ResetPassInfo"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    UserDef:
+      type: object
+      properties:
+        alias:
+          type: string
+        account:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+            - switch
+            - view
+        channels:
+          type: array
+          items:
+            type: integer
+        group_id:
+          type: integer
+        desc:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        create_time:
+          type: integer
+        update_time:
+          type: integer
+        alias:
+          type: string
+        account:
+          type: string
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+            - switch
+            - view
+        group:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        channels:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+        desc:
+          type: string
+
+    LoginInfo:
+      type: object
+      properties:
+        account:
+          type: string
+        password:
+          type: string
+    
+    TokenInfo:
+      type: object
+      properties:
+        token:
+          type: string
+
+    RoleInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+            - switch
+            - view
+        channels:
+          type: array
+          items:
+            type: integer
+
+    ResetPassInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        ori_password:
+          type: string
+        password:
+          type: string
+
+    CustomizedGroupCreationRequiredInfo.v1:
+      type: object
+      description: 可编辑的群组必填信息
+      properties:
+        api:
+          type: string
+          description: 服务版本
+          enum: ["v1"]
+      required: 
+      - api
+
+    CustomizedGroupInfo.v1:
+      type: object
+      description: 可编辑的群组选填信息
+      properties:
+        name:
+          type: string
+          description: 群组名称
+        parents_group:
+          type: integer
+          description: 父群组
+        description:
+          type: string
+          description: 备注
+        api:
+          type: string
+          description: 服务版本
+          enum: ["v1"]
+      required:
+      - api
+
+    GeneratedGroupInfo.v1:
+      type: object
+      description: 生成的群组信息
+      properties:
+        id:
+          type: integer
+          description: 群组ID
+        ctime:
+          type: integer
+          description: 创建时间
+
+    GroupCreationInfo.v1:
+      allOf:
+        - $ref: '#/components/schemas/CustomizedGroupCreationRequiredInfo.v1'
+        - $ref: '#/components/schemas/CustomizedGroupInfo.v1'
+
+    GroupInfo.v1:
+      allOf:
+        - $ref: '#/components/schemas/CustomizedGroupCreationRequiredInfo.v1'
+        - $ref: '#/components/schemas/CustomizedGroupInfo.v1'
+        - $ref: '#/components/schemas/GeneratedGroupInfo.v1'

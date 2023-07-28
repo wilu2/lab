@@ -1,0 +1,481 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/logs/list_service:
+    get:
+      tags: [Logs]
+      summary: List Services
+      description: TBA
+      operationId: list_service
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+
+  /gateway/v1/logs/list_channel:
+    get:
+      tags: [Logs]
+      summary: List Channels
+      description: TBA
+      operationId: list_channels
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: service_id
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+
+  /gateway/v1/logs/list_application:
+    get:
+      tags: [Logs]
+      summary: List Applications
+      description: TBA
+      operationId: list_applications
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: service_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: channel_id
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+ 
+  /gateway/v1/logs/list_version:
+    get:
+      tags: [Logs]
+      summary: List Versions
+      description: TBA
+      operationId: list_versions
+      parameters:
+        - in: query
+          name: service_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: array
+                    items:
+                      type: string
+
+  /gateway/v1/logs/query:
+    post:
+      tags: [Logs]
+      summary: Get Logs
+      description: TBA
+      operationId: query_logs
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LogsReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LogsItem"
+                
+  /gateway/v1/logs/sum_request_line:
+    post:
+      tags: [Logs Chart]
+      summary: 请求总数折线图
+      description: TBA
+      operationId: sum_request_line
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LogsReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/LineChartInfo"
+
+  /gateway/v1/logs/concur_line:
+    post:
+      tags: [Logs Chart]
+      summary: 并发数折线图
+      description: TBA
+      operationId: concur_line
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LogsReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/LineChartInfo"
+            
+  /gateway/v1/logs/dist_column:
+    post:
+      tags: [Logs Chart]
+      summary: 请求状态分布柱状图
+      description: TBA
+      operationId: dist_column
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LogsReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/ColumnChartInfo"       
+
+  /gateway/v1/logs/avg_resp_time_line:
+    post:
+      tags: [Logs Chart]
+      summary: 平均请求时间折现图
+      description: TBA
+      operationId: avg_resp_time_line
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/LogsReq"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/LineChartInfo"  
+
+  /gateway/v1/logs/get_request:
+    get:
+      tags: [Body Logger]
+      summary: Get Request Body
+      description: TBA
+      operationId: get_request
+      parameters:
+        - in: query
+          name: request_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 成功返回
+          content:
+            text/plain:
+              schema:
+                type: string   
+
+  /gateway/v1/logs/get_response:
+    get:
+      tags: [Body Logger]
+      summary: Get Response Body
+      description: TBA
+      operationId: get_response
+      parameters:
+        - in: query
+          name: request_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 成功返回
+          content:
+            text/plain:
+              schema:
+                type: string      
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    LogsReq:
+      type: object
+      properties:
+        service_id:
+          type: integer
+        channel_id:
+          type: integer
+        application_id:
+          type: array
+          items:
+            type: integer
+        request_id:
+          type: string
+        status:
+          type: array
+          items:
+            type: integer
+        version:
+          type: array
+          items: 
+            type: string
+        begin_date:
+          type: integer
+        end_date:
+          type: integer
+
+    LineChartInfo:
+      type: object
+      properties:
+        xAxis:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: "#/components/schemas/LineSeries"
+
+    LineSeries:
+      type: object
+      properties:
+        name:
+          type: string
+        data:
+          type: array
+          items:
+            type: integer
+
+    ColumnChartInfo:
+      type: object
+      properties:
+        category:
+          type: array
+          items:
+            type: string
+        series:
+          type: array
+          items:
+            $ref: "#/components/schemas/ColumnSeries"
+
+    ColumnSeries:
+      type: object
+      properties:
+        name:
+          type: string
+        data:
+          type: array
+          items:
+            type: integer
+
+    LogsItem:
+      type: object
+      properties:
+        client_addr:
+          type: string
+        iso_time:
+          type: string
+        timestamp:
+          type: number
+        time_cost:
+          type: number
+        request_length:
+          type: integer
+        connection: 
+          type: string
+        connection_requests:
+          type: string
+        uri: 
+          type: string
+        ori_request: 
+          type: string
+        query_string: 
+          type: string
+        status:
+          type: integer
+        bytes_sent: 
+          type: integer
+        referer: 
+          type: string
+        user_agent: 
+          type: string
+        forwarded_for: 
+          type: string
+        host: 
+          type: string
+        node:
+          type: string
+        upstream: 
+          type: string

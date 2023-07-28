@@ -1,0 +1,144 @@
+info(
+    title: "TextIn Gateway"
+    author: "chen_qian"
+    date: "2022-09-28"
+    desc: "User API 接口"
+    version: "2.0 alpha"
+)
+
+type UserInitCheckResp {
+    InitOr bool `json:"InitOr"`
+} // 用户系统初始化检测
+
+type UserInitInfo {
+    UserName string `json:"UserName" binding:"required,len=32"`
+    Password string `json:"Password" binding:"required,len=32"`
+} // 用户初始化
+
+@server(
+    group: userInit
+    prefix: /api/v2
+    swtags: "User Init"
+)
+service textin {
+    @doc "查看是否初始化用户"
+    @handler Check
+    post /user/init_check () returns (UserInitCheckResp)
+    @doc "创建初始化用户"
+    @handler UserInit
+    post /user/init_user (UserInitInfo) returns (UserLoginResp)
+}
+
+type (
+    UserLoginReq {
+        UserName string `json:"username" binding:"required,email"`              // 登陆账号
+        Password string `json:"password" binding:"required,len=32"`             // 原始密码长度 8 ～ 20 位，传递 md5 加密的值
+    }
+    UserLoginResp {
+        Expire string `json:"expire"`   // jwt 过期时间
+        Token string `json:"token"`     // jwt 中携带 uid
+    }
+) // 用户登陆
+
+@server(
+    group: userAuth
+    prefix: /api/v1
+    swtags: "User Auth"
+)
+service textin {
+    @doc "用户登陆"
+    @handler Login
+    post /user/login (UserLoginReq) returns (UserLoginResp)
+
+    @doc "退出登陆"
+    @handler LogoutUser
+    post /user/logout () returns ()
+
+    @doc "刷新token有效期"
+    @handler RefreshToken
+    post /user/refresh_token () returns (UserLoginResp)
+}
+
+type UserCreateReq {
+    UserName string `json:"username" binding:"required"`              // 登陆邮箱，目前为邮箱，不区分大小写
+    Description string `json:"description"`
+    RoleUUID string `json:"role_uuid" binding:"required"`
+    Password string `json:"password" binding:"required,len=32"`             // 密码长度 8 ～ 20 位，前端传递 md5(pw) 小写，后端密码生成规则 md5(slat + md5(pw) + rand slat + username)
+} // 用户注册
+
+type UserUpdateReq {
+    UserName string `json:"username" binding:"required"`              // 登陆邮箱，目前为邮箱，不区分大小写
+    Description string `json:"description"`
+    RoleUUID string `json:"role_uuid" binding:"required"`
+    Password string `json:"password" binding:"required,len=32"` 
+} // 用户信息修改
+
+type UserResetPassReq {
+    OldPassword string `json:"old_password" binding:"required,len=32"`        // 邮件里重置密码的一次性 token
+    NewPassword string `json:"new_password" binding:"required,len=32"`         // 密码长度 8 ～ 20 位，前端传递 md5(pw) 小写，后端密码生成规则 md5(slat + md5(pw) + rand slat + username)
+} // 用户密码重置
+
+type UserInfoResp {
+    UserName string `json:"username"`              // 登陆邮箱，目前为邮箱，不区分大小写
+    RoleUUID string `json:"role_uuid"` 
+    Description string `json:"description"`   
+} // 用户信息
+
+type UserDeleteResp {
+
+} // 删除用户反馈
+
+type UserResetPassResp {
+
+} // 删除用户反馈
+
+@server(
+    jwt: Auth
+    group: userManage
+    prefix: /api/v2
+    swtags: "User Manage"
+)
+service textin {
+    @doc "创建用户"
+    @handler UserCreate
+    post /user/create (UserCreateReq) returns (UserInfoResp)
+    @doc "获取用户本人信息"
+    @handler UserSelf
+    get /user/self () returns (UserInfoResp)
+    @doc "获取指定用户信息"
+    @handler UserGet
+    get /user/:id () returns (UserInfoResp)
+    @doc "修改用户信息"
+    @handler UserUpdate
+    post /user/:id/update (UserUpdateReq) returns (UserInfoResp)
+    @doc "删除用户"
+    @handler UserDelete
+    post /user/:id/delete () returns (UserDeleteResp)
+    @doc "重置密码"
+    @handler UserResetPass
+    post /user/reset_password (UserResetPassReq) returns (UserResetPassResp)
+}
+
+// @server(
+//     jwt: Auth
+//     group: userRole
+//     prefix: /api/v2
+//     swtags: "Role Manage"
+// )
+// service textin {
+//     @doc "发送邮件"
+//     @handler RoleCreate
+//     post /role/create (EmailSendReq) returns ()
+
+//     @doc "邮件链接激活确认"
+//     @handler RoleGet
+//     get /role/:id (EmailConfirmationReq) returns ()
+
+//     @doc "检查邮箱是否被注册"
+//     @handler RoleUpdate
+//     post /role/:id/update (EmailCheckExistReq) returns (EmailCheckExistResp)
+
+//     @doc "检查邮箱是否被注册"
+//     @handler RoleDelete
+//     post /role/:id/delete (EmailCheckExistReq) returns (EmailCheckExistResp)
+// }

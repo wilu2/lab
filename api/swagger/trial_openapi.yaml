@@ -1,0 +1,153 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/trial_services:
+    get:
+      tags: [Trials]
+      summary: List Trial Services
+      description: TBA
+      operationId: list_trial_services
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TrialService"
+                      count:
+                        type: integer
+                        format: int64
+
+  /gateway/v1/trials:
+    post:
+      tags: [Trials]
+      summary: Create Trials
+      description: TBA
+      operationId: create_trials
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/TrialRouteDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/TrialRoute"
+
+  /gateway/v1/trial/validate:
+    post:
+      tags: [Trials]
+      summary: Create Trials
+      description: TBA
+      operationId: create_trials
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/TrialRouteDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/TrialRoute"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    TrialRouteDef:
+      type: object
+      properties:
+        service_id:
+          type: integer
+
+    TrialRoute:
+      type: object
+      properties:
+        app_key:
+          type: string
+        app_secret:
+          type: string
+
+    ApiDef:
+      type: object
+      properties:
+        method:
+          type: string
+        path:
+          type: string
+
+    ApiSet:
+      type: array
+      items:
+        $ref: "#/components/schemas/ApiDef"
+
+    TrialService:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        api_set:
+          $ref: "#/components/schemas/ApiSet"

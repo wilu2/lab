@@ -1,0 +1,1120 @@
+openapi: 3.0.2
+info:
+  title: "Textin Gateway API"
+  version: "1.1.0"
+
+security:
+  - BearerAuth: []
+
+paths:
+  /gateway/v1/services:
+    get:
+      tags: [Service]
+      summary: List Services
+      description: TBA
+      operationId: list_services
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: exist_doc
+          required: false
+          schema:
+            type: integer
+            enum: [0,1]
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Service"
+                      count:
+                        type: integer
+                        format: int64
+    post:
+      tags: [Service]
+      summary: Create Services
+      description: TBA
+      operationId: create_services
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ServiceDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/Service"
+
+  /gateway/v1/services/{id}:
+    get:
+      tags: [Service]
+      summary: Get Services
+      description: TBA
+      operationId: get_services
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/Service"
+
+  /gateway/v1/services/{id}/update:
+    post:
+      tags: [Service]
+      summary: Update Services
+      description: TBA
+      operationId: update_services
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ServiceDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    $ref: "#/components/schemas/Service"
+
+  /gateway/v1/services/{id}/delete:
+    get:
+      tags: [Service]
+      summary: Delete Services
+      description: TBA
+      operationId: delete_services
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                      name:
+                        type: integer
+                        format: int32
+                      description:
+                        type: string
+
+
+  /gateway/v1/channels:
+    get:
+      tags: [Channel]
+      summary: List Channels
+      description: TBA
+      operationId: list_channels
+      parameters:
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items: 
+                          $ref: "#/components/schemas/Channel"
+                      count:
+                        type: integer
+                        format: int64
+    post:
+      tags: [Channel]
+      summary: Create Channels
+      description: TBA
+      operationId: create_channels
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ChannelDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    schema: 
+                    $ref: "#/components/schemas/Channel"
+
+  /gateway/v1/channels/{id}:
+    get:
+      tags: [Channel]
+      summary: Get Channels
+      description: TBA
+      operationId: get_channels
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    schema: 
+                    $ref: "#/components/schemas/Channel"
+
+  /gateway/v1/channels/{id}/update:
+    post:
+      tags: [Channel]
+      summary: Update Channels
+      description: TBA
+      operationId: update_channels
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ChannelDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    schema: 
+                    $ref: "#/components/schemas/Channel"
+
+  /gateway/v1/channels/{id}/delete:
+    get:
+      tags: [Channel]
+      summary: Delete Channels
+      description: TBA
+      operationId: delete_services
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                      name:
+                        type: integer
+                        format: int32
+                      description:
+                        type: string
+
+  /gateway/v1/applications:
+    get:
+      tags: [Application]
+      summary: List Applications
+      description: TBA
+      operationId: list_applications
+      parameters:
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum:
+              - edit
+              - view
+        - in: query
+          name: exist_doc
+          required: false
+          schema:
+            type: integer
+            enum: [0,1]
+        - in: query
+          name: channel_id
+          required: false
+          schema:
+            type: integer       
+        - in: query
+          name: keyword
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          schema: 
+                          $ref: "#/components/schemas/Application"
+                      count:
+                        type: integer
+                        format: int64
+    post:
+      tags: [Application]
+      summary: Create Applications
+      description: TBA
+      operationId: create_applications
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ApplicationDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    schema: 
+                    $ref: "#/components/schemas/Application"
+
+  /gateway/v1/applications/{id}:
+    get:
+      tags: [Application]
+      summary: Get Applications
+      description: TBA
+      operationId: get_Applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    schema: 
+                    $ref: "#/components/schemas/Application"
+
+  /gateway/v1/applications/{id}/update:
+    post:
+      tags: [Application]
+      summary: Update Applications
+      description: TBA
+      operationId: update_applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ChannelDef"
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                      name:
+                        type: integer
+                        format: int32
+                      description:
+                        type: string
+
+  /gateway/v1/applications/{id}/delete:
+    get:
+      tags: [Application]
+      summary: Delete Applications
+      description: TBA
+      operationId: delete_applications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 成功返回
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: 状态码
+                    default: '200'
+                  msg:
+                    type: string
+                    description: message
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                      name:
+                        type: integer
+                        format: int32
+                      description:
+                        type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    BaseInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        create_time:
+          type: integer
+          format: int64
+        update_time:
+          type: integer
+          format: int64
+
+    TimeoutValue:
+      type: number
+      format: float
+
+    Timeout:
+      type: object
+      properties:
+        connect:
+          schema: 
+          $ref: "#/components/schemas/TimeoutValue"
+        send:
+          schema: 
+          $ref: "#/components/schemas/TimeoutValue"
+        read:
+          schema: 
+          $ref: "#/components/schemas/TimeoutValue"
+
+    Node:
+      type: object
+      properties:
+        host:
+          type: string
+        port:
+          type: integer
+        weight:
+          type: integer
+        metadata:
+          type: object
+        priority:
+          type: integer
+
+    Healthy:
+      type: object
+      properties:
+        interval:
+          type: integer
+        http_statuses:
+          type: array
+          items:
+            type: integer
+        successes:
+          type: integer
+    
+    UnHealthy:
+      type: object
+      properties:
+        interval:
+          type: integer
+        http_statuses:
+          type: array
+          items:
+            type: integer
+        tcp_failures:
+            type: integer
+        timeouts:
+          type: integer
+        http_failures:
+          type: integer
+
+    Active:
+      type: object
+      properties:
+        type:
+          type: string
+        timeout:
+          schema: 
+          $ref: "#/components/schemas/TimeoutValue"
+        concurrency:
+          type: integer
+        host:
+          type: string
+        port:
+          type: integer
+        http_path:
+          type: string
+        https_verify_certificate:
+          type: boolean
+        healthy:
+          schema: 
+          $ref: "#/components/schemas/Healthy"
+        unhealthy:
+          schema: 
+          $ref: "#/components/schemas/UnHealthy"
+        req_headers:
+          type: array
+          items:
+            type: string
+
+    Passive:
+      type: object
+      properties:
+        type:
+          type: string
+        healthy:
+          schema: 
+          $ref: "#/components/schemas/Healthy"
+        unhealthy:
+          schema: 
+          $ref: "#/components/schemas/UnHealthy"
+
+    HealthChecker:
+      type: object
+      properties:
+        active:
+          schema: 
+          $ref: "#/components/schemas/Active"
+        passive:
+          schema: 
+          $ref: "#/components/schemas/Passive"
+
+    UpstreamTLS:
+      type: object
+      properties:
+        client_cert:
+          type: string
+        client_key:
+          type: string
+
+    UpstreamKeepalivePool:
+      type: object
+      properties:
+        idle_timeout:
+          schema: 
+          $ref: "#/components/schemas/TimeoutValue"         
+        requests:
+          type: integer
+        size:
+          type: integer
+
+    UpstreamDef:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items: 
+            schema: 
+            $ref: "#/components/schemas/Node"  
+        retries:
+          type: integer
+        timeout:
+          schema: 
+          $ref: "#/components/schemas/Timeout" 
+        type:
+          type: string
+        checks:
+          schema: 
+          $ref: "#/components/schemas/HealthChecker"  
+        hash_on:
+          type: string
+        key:
+          type: string
+        scheme:
+          type: string
+        discovery_type:
+          type: string
+        discovery_args:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            device: gpu
+            language: cjkwe
+        pass_host:
+          type: string
+          enum:
+            - pass
+            - node
+            - rewrite
+        upstream_host:
+          type: string
+        name:
+         type: string
+        desc:
+          type: string
+        service_name:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            device: gpu
+            language: cjkwe
+        tls:
+          $ref: "#/components/schemas/UpstreamTLS"          
+        KeepalivePool:
+          $ref: "#/components/schemas/UpstreamKeepalivePool" 
+        RetryTimeout:
+          $ref: "#/components/schemas/TimeoutValue" 
+    
+    Upstream:
+      allOf:
+        - $ref: "#/components/schemas/BaseInfo"
+        - $ref: "#/components/schemas/RouteDef"
+
+    ApiDef:
+      type: object
+      properties:
+        method:
+          type: string
+        path:
+          type: string
+
+    ApiSet:
+      type: array
+      items:
+        $ref: "#/components/schemas/ApiDef"
+
+    ServiceDef:
+      type: object
+      properties:
+        upstream_def:
+          $ref: "#/components/schemas/Upstream"
+        document_content:
+          type: string
+        api_set:
+          $ref: "#/components/schemas/ApiSet"
+        node_map:
+          $ref: "#/components/schemas/NodeMap"
+
+    EditInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        creator:
+          type: string
+        create_time:
+          type: integer
+        last_editor:
+          type: string
+        update_time:
+          type: integer
+
+    Service:
+      allOf:
+        - $ref: "#/components/schemas/EditInfo"
+        - type: object
+          properties:
+            upstream_def:
+              $ref: "#/components/schemas/Upstream"
+            document_id:
+              type: integer
+            api_set:
+              $ref: "#/components/schemas/ApiSet"
+            node_map:
+              $ref: "#/components/schemas/NodeMap"
+
+    ChannelDef:
+      type: object
+      properties:
+        name:
+          type: string
+    
+    Channel:
+      allOf:
+        - $ref: "#/components/schemas/EditInfo"
+        - $ref: "#/components/schemas/ChannelDef"
+
+    Status:
+      type: integer
+      format: uint8
+
+    KeyValue:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string  
+
+    ApiBreaker:
+      type: object
+      properties:
+        break_response_body:
+          type: string
+        break_response_code:
+          $ref: "#/components/schemas/Status"
+        break_response_headers:
+          type: array
+          items: 
+            $ref: '#/components/schemas/KeyValue'           
+        disable:
+          type: boolean
+          default: true 
+        healthy:
+          type: object
+          properties:
+            http_statuses:
+              type: array
+              items:
+                $ref: '#/components/schemas/Status'
+            successes:
+              type: integer           
+        max_breaker_sec:
+          type: integer
+        unhealthy:
+          type: object
+          properties:
+            failures:
+              type: integer
+            http_statuses:
+              type: array
+              items:
+                $ref: '#/components/schemas/Status'
+  
+    IPRestriction:
+      type: object
+      properties:
+        whitelist:
+          type: array
+          items: 
+            type: string
+        blacklist:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+       
+    LimitCount:
+      type: object
+      properties:
+        count:
+          type: integer
+        time_window:
+          type: integer
+        key_type:
+          type: string
+        key:
+          type: string
+        rejected_code:
+          $ref: '#/components/schemas/Status'
+        rejected_msg:
+          type: string
+        policy:
+          type: string
+        allow_degradation:
+          type: boolean
+        show_limit_quota_header:
+          type: boolean
+        group:
+          type: string
+        redis_host:
+          type: string
+        redis_port:
+          type: integer
+        redis_password:
+          type: string
+        redis_database:
+          type: integer
+        redis_timeout:
+          type: integer
+        redis_cluster_nodes:
+          type: array
+        redis_cluster_name:
+          type: string
+    
+    ProxyRewrite:
+      type: object
+      properties:
+        uri:
+          type: string
+        method:
+          type: string
+          enum:
+            - "GET" 
+            - "POST" 
+            - "PUT" 
+            - "HEAD"
+            - "DELETE" 
+            - "OPTIONS"
+            - "MKCOL" 
+            - "COPY" 
+            - "MOVE"
+            - "PROPFIND"
+            - "LOCK"
+            - "UNLOCK" 
+            - "PATCH" 
+            - "TRACE"
+        regex_uri:
+          type: array
+          items:
+            type: string
+        host:
+          type: string
+        headers:
+          type: object
+          properties:
+            add:
+              type: object
+              additionalProperties:
+                type: string
+            set:
+              type: object
+              additionalProperties:
+                type: string
+            remove:
+              type: array
+              items:
+                type: string
+        use_real_request_uri_unsafe:
+          type: boolean
+
+    RouteDef:
+      type: object
+      properties:
+        uri:
+          type: string
+        uris:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        desc:
+          type: string
+        priority:
+          type: integer
+        methods:
+          type: array
+          items:
+            type: string
+        host:
+          type: string
+        hosts:
+          type: array
+          items:
+            type: string
+        remote_addr:
+          type: string
+        remote_addrs:
+          type: array
+          items:
+            type: string
+        vars:
+          type: array
+        filter_func:
+          type: string
+        script:
+          type: object
+        script_id:
+          type: object
+        plugins:
+          type: object
+          properties:
+            ip-restriction:
+              $ref: '#/components/schemas/IPRestriction'
+            api-breaker:
+              $ref: '#/components/schemas/ApiBreaker'
+            limit-count:
+              $ref: '#/components/schemas/LimitCount'
+            proxy-rewrite:
+              $ref: '#/components/schemas/ProxyRewrite'
+        plugin_config_id:
+          type: integer
+        service_id:
+          type: string
+          description: not textin gateway service
+        upstream_id:
+          type: string
+        service_protocol:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            device: gpu
+            language: cjkwe
+        enable_websocket:
+          type: boolean
+        status:
+          schema:
+          $ref: "#/components/schemas/Status"
+
+    Route:
+      allOf:
+        - $ref: "#/components/schemas/BaseInfo"
+        - $ref: "#/components/schemas/RouteDef"
+
+    ApplicationDef:
+      type: object
+      properties:
+        route_def:
+          schema:
+          $ref: "#/components/schemas/RouteDef"
+        service_id:
+          type: integer
+        channel_id:
+          type: integer
+        ttl:
+          type: integer
+
+    Application:
+      allOf:
+        - $ref: "#/components/schemas/EditInfo"
+        - $ref: "#/components/schemas/ApplicationDef"
+        - type: object
+          properties:
+            document_id: 
+              type: integer
+
+    NodeVersion:
+      type: object
+      properties:
+        host:
+          type: string
+        port:
+          type: integer
+        version:
+          type: string
+
+    NodeMap:
+      type: array
+      items:
+        $ref: "#/components/schemas/NodeVersion"
